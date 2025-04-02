@@ -9,6 +9,12 @@
         </head>
 
         <body>
+            <style>
+                .input-hidden {
+                    display: none;
+                }
+            </style>
+
             <h1>Lista de Productos</h1>
             <a href="${pageContext.request.contextPath}/productos/nuevo">Agregar Producto</a>
             <table border="1">
@@ -27,44 +33,154 @@
             </table>
 
             <script>
-                fetch("${pageContext.request.contextPath}/api/productos")
-                    .then(response => response.json())
-                    .then(data => {
-                        const tbody = document.getElementById("productos-table-body");
-                        tbody.innerHTML = ""; // Limpiar contenido anterior
+                document.addEventListener("DOMContentLoaded", () => {
+                    fetch(`${pageContext.request.contextPath}/api/productos`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Datos de productos:", data);
 
-                        data.forEach(producto => {
-                            const row = document.createElement("tr");
+                            const tbody = document.getElementById("productos-table-body");
+                            tbody.innerHTML = "";
 
-                            const idCell = document.createElement("td");
-                            idCell.textContent = producto.id;
+                            data.forEach(producto => {
+                                const productoId = producto.id;
 
-                            const nombreCell = document.createElement("td");
-                            nombreCell.textContent = producto.nombre;
+                                if (!productoId) {
+                                    console.error("❌ ERROR: El producto no tiene ID:", producto);
+                                    return;
+                                }
 
-                            const descripcionCell = document.createElement("td");
-                            descripcionCell.textContent = producto.descripcion;
+                                const row = document.createElement("tr");
 
-                            const precioCell = document.createElement("td");
-                            precioCell.textContent = producto.precio;
+                                // Crear celdas
+                                const idCell = document.createElement("td");
+                                idCell.textContent = productoId;
 
-                            const accionesCell = document.createElement("td");
-                            accionesCell.innerHTML = `
-                <a href="/productos/editar/${producto.id}">Editar</a>
-                <a href="/productos/eliminar/${producto.id}" onclick="return confirm('¿Seguro que deseas eliminar este producto?')">Eliminar</a>
-            `;
+                                const nombreCell = document.createElement("td");
+                                const nombreSpan = document.createElement("span");
+                                nombreSpan.textContent = producto.nombre;
+                                const nombreInput = document.createElement("input");
+                                nombreInput.type = "text";
+                                nombreInput.value = producto.nombre;
+                                nombreInput.classList.add("input-hidden");
 
-                            row.appendChild(idCell);
-                            row.appendChild(nombreCell);
-                            row.appendChild(descripcionCell);
-                            row.appendChild(precioCell);
-                            row.appendChild(accionesCell);
+                                nombreCell.appendChild(nombreSpan);
+                                nombreCell.appendChild(nombreInput);
 
-                            tbody.appendChild(row);
-                        });
+                                const descripcionCell = document.createElement("td");
+                                const descripcionSpan = document.createElement("span");
+                                descripcionSpan.textContent = producto.descripcion;
+                                const descripcionInput = document.createElement("input");
+                                descripcionInput.type = "text";
+                                descripcionInput.value = producto.descripcion;
+                                descripcionInput.classList.add("input-hidden");
+
+                                descripcionCell.appendChild(descripcionSpan);
+                                descripcionCell.appendChild(descripcionInput);
+
+                                const precioCell = document.createElement("td");
+                                const precioSpan = document.createElement("span");
+                                precioSpan.textContent = producto.precio;
+                                const precioInput = document.createElement("input");
+                                precioInput.type = "number";
+                                precioInput.value = producto.precio;
+                                precioInput.classList.add("input-hidden");
+
+                                precioCell.appendChild(precioSpan);
+                                precioCell.appendChild(precioInput);
+
+                                const accionesCell = document.createElement("td");
+
+                                // Botón Editar
+                                const editarBtn = document.createElement("button");
+                                editarBtn.textContent = "Editar";
+                                editarBtn.onclick = () => editarProducto(editarBtn);
+
+                                // Botón Guardar
+                                const guardarBtn = document.createElement("button");
+                                guardarBtn.textContent = "Guardar";
+                                guardarBtn.classList.add("input-hidden");
+                                guardarBtn.onclick = () => guardarProducto(guardarBtn, productoId);
+
+                                // Enlace Eliminar
+                                const eliminarLink = document.createElement("a");
+                                eliminarLink.href = `${pageContext.request.contextPath}/productos/eliminar/${productoId}`;
+                                eliminarLink.textContent = "Eliminar";
+                                eliminarLink.onclick = () => confirm("¿Seguro que deseas eliminar este producto?");
+
+                                accionesCell.appendChild(editarBtn);
+                                accionesCell.appendChild(guardarBtn);
+                                accionesCell.appendChild(document.createTextNode(" | "));
+                                accionesCell.appendChild(eliminarLink);
+
+                                // Agregar celdas a la fila
+                                row.appendChild(idCell);
+                                row.appendChild(nombreCell);
+                                row.appendChild(descripcionCell);
+                                row.appendChild(precioCell);
+                                row.appendChild(accionesCell);
+
+                                tbody.appendChild(row);
+                            });
+                        })
+                        .catch(error => console.error("Error al cargar los productos:", error));
+                });
+
+                function editarProducto(button) {
+                    const row = button.closest("tr");
+
+                    row.querySelectorAll("span").forEach(span => span.style.display = "none");
+                    row.querySelectorAll("input").forEach(input => input.style.display = "inline");
+
+                    button.style.display = "none"; // Ocultar botón "Editar"
+                    row.querySelector("button:nth-child(2)").style.display = "inline"; // Mostrar "Guardar"
+                }
+
+                function guardarProducto(button, id) {
+                    const row = button.closest("tr");
+                    const inputs = row.querySelectorAll("input");
+                    const nombre = inputs[0].value;
+                    const descripcion = inputs[1].value;
+                    const precio = parseFloat(inputs[2].value);
+
+                    fetch(`${pageContext.request.contextPath}/api/productos/${id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ nombre, descripcion, precio })
                     })
-                    .catch(error => console.error("Error al cargar los productos:", error));
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Error en la actualización");
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log("Producto actualizado:", data);
+
+                            // Mostrar valores actualizados en la tabla
+                            const spans = row.querySelectorAll("span");
+                            spans[0].textContent = nombre;
+                            spans[1].textContent = descripcion;
+                            spans[2].textContent = precio;
+
+                            // Restaurar la vista normal
+                            row.querySelectorAll("span").forEach(span => span.style.display = "inline");
+                            row.querySelectorAll("input").forEach(input => input.style.display = "none");
+
+                            row.querySelector("button:nth-child(1)").style.display = "inline"; // Mostrar "Editar"
+                            row.querySelector("button:nth-child(2)").style.display = "none"; // Ocultar "Guardar"
+                        })
+                        .catch(error => {
+                            console.error("Error al actualizar producto:", error);
+                            alert("No se pudo actualizar el producto.");
+                        });
+                }
             </script>
+
+
+
         </body>
 
         </html>
