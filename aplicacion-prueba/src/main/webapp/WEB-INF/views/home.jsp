@@ -99,15 +99,20 @@
 
                 function crearCelda(valor, tipo, soloLectura = false) {
                     const cell = document.createElement("td");
+
+                    // Crear el elemento span para mostrar el valor por defecto
                     const span = document.createElement("span");
                     span.textContent = valor;
 
+                    // Crear el input para edición
                     const input = document.createElement("input");
                     input.type = tipo;
                     input.value = valor;
                     input.classList.add("input-hidden");
 
-                    if (soloLectura) input.readOnly = true;
+                    if (soloLectura) {
+                        input.readOnly = true;
+                    }
 
                     cell.appendChild(span);
                     cell.appendChild(input);
@@ -121,10 +126,10 @@
                     button.style.display = "none"; // Ocultar "Editar"
                     row.querySelector("button:nth-child(2)").style.display = "inline"; // Mostrar "Guardar"
                 }
-
                 function guardarProducto(row, button) {
+                    const id = row.querySelector("input[readonly]").value; // ID fijo
                     const inputs = row.querySelectorAll("input:not([readonly])");
-                    const id = row.querySelector("input[readonly]").value;
+
                     const nombre = inputs[0].value;
                     const descripcion = inputs[1].value;
                     const precio = parseFloat(inputs[2].value);
@@ -141,25 +146,17 @@
                         .then(data => {
                             console.log("Producto actualizado:", data);
 
-                            // Actualizar valores visibles
-                            const spans = row.querySelectorAll("span");
-                            spans[0].textContent = nombre;
-                            spans[1].textContent = descripcion;
-                            spans[2].textContent = precio;
-
-                            // Restaurar vista normal
-                            row.querySelectorAll("span").forEach(span => span.style.display = "inline");
-                            row.querySelectorAll("input").forEach(input => input.style.display = "none");
-
-                            row.querySelector("button:nth-child(1)").style.display = "inline"; // Mostrar "Editar"
-                            button.style.display = "none"; // Ocultar "Guardar"
+                            // 🔄 Recargar la página automáticamente
+                            location.reload();
                         })
                         .catch(error => {
                             console.error("Error al actualizar producto:", error);
                             alert("No se pudo actualizar el producto.");
                         });
                 }
+
             </script>
+
 
 
 
