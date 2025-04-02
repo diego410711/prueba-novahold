@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -59,6 +60,25 @@ public class ProductoRestController {
             return ResponseEntity.ok(p);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado");
+        }
+    }
+
+    @DeleteMapping("/eliminar")
+    public ResponseEntity<String> eliminarProducto(@RequestBody Map<String, String> request) {
+        try {
+            Long id = Long.parseLong(request.get("id")); // Convertir el ID a Long
+
+            if (!productoRepository.existsById(id)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado");
+            }
+
+            productoRepository.deleteById(id); // 🔥 Eliminar el producto
+            return ResponseEntity.ok("Producto eliminado correctamente");
+
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body("ID inválido");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar el producto");
         }
     }
 

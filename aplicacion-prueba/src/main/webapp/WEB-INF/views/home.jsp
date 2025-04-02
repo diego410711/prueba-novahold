@@ -46,7 +46,7 @@
                                 console.log("Id de producto:", producto.id);
 
                                 if (!producto.id) {
-                                    console.error("❌ ERROR: El producto no tiene ID:", producto);
+                                    console.error("ERROR: El producto no tiene ID:", producto);
                                     return;
                                 }
 
@@ -73,16 +73,15 @@
                                 guardarBtn.onclick = () => guardarProducto(row, guardarBtn);
 
                                 // Enlace Eliminar
-                                const eliminarLink = document.createElement("a");
-                                eliminarLink.href = `${pageContext.request.contextPath}/productos/eliminar/${producto.id}`;
-                                eliminarLink.textContent = "Eliminar";
-                                eliminarLink.onclick = () => confirm("¿Seguro que deseas eliminar este producto?");
+                                const eliminarBtn = document.createElement("button");
+                                eliminarBtn.textContent = "Eliminar";
+                                eliminarBtn.onclick = () => eliminarProducto(row);;
 
                                 // Agregar acciones
                                 accionesCell.appendChild(editarBtn);
                                 accionesCell.appendChild(guardarBtn);
                                 accionesCell.appendChild(document.createTextNode(" | "));
-                                accionesCell.appendChild(eliminarLink);
+                                accionesCell.appendChild(eliminarBtn);
 
                                 // Agregar celdas a la fila
                                 row.appendChild(idCell);
@@ -154,6 +153,35 @@
                             alert("No se pudo actualizar el producto.");
                         });
                 }
+
+                function eliminarProducto(row) {
+    const id = row.querySelector("td:first-child span").textContent.trim(); // Asegurar que no haya espacios en blanco
+
+    if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
+
+    fetch(`${pageContext.request.contextPath}/api/productos/eliminar`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }) // Enviar el ID en el payload
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(errorMessage => { 
+                throw new Error(errorMessage || "Error desconocido al eliminar el producto.");
+            });
+        }
+        return response.text(); // Leer la respuesta como texto
+    })
+    .then(message => {
+        console.log("✅ Producto eliminado:", message);
+        alert("Producto eliminado correctamente.");
+        location.reload(); // 🔄 Recargar la página solo si fue exitoso
+    })
+    .catch(error => {
+        console.error("Error al eliminar el producto:", error);
+        alert("No se pudo eliminar el producto. Detalles: " + error.message);
+    });
+}
 
             </script>
 
