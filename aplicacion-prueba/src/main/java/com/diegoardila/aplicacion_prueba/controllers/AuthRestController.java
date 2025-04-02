@@ -8,10 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.diegoardila.aplicacion_prueba.models.Usuario;
 import com.diegoardila.aplicacion_prueba.services.UsuarioService;
@@ -52,8 +49,7 @@ public class AuthRestController {
                 return ResponseEntity.ok(Map.of(
                         "message", "Inicio de sesión exitoso",
                         "user", usuario.getEmail(),
-                        "redirectUrl", "/home" // Agregar URL de redirección
-                ));
+                        "redirectUrl", "/home"));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("error", "Error en la autenticación."));
@@ -64,9 +60,63 @@ public class AuthRestController {
         }
     }
 
+    @PostMapping("/registro")
+    public ResponseEntity<?> registrarUsuario(@RequestBody RegistroRequest registroRequest) {
+        try {
+            if (usuarioService.buscarPorEmail(registroRequest.getEmail()) != null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "El correo ya está registrado."));
+            }
+
+            Usuario nuevoUsuario = new Usuario();
+            nuevoUsuario.setNombre(registroRequest.getNombre());
+            nuevoUsuario.setEmail(registroRequest.getEmail());
+            nuevoUsuario.setPassword(passwordEncoder.encode(registroRequest.getPassword()));
+
+            usuarioService.registrarUsuario(nuevoUsuario);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Registro exitoso",
+                    "redirectUrl", "/login"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Error inesperado: " + e.getMessage()));
+        }
+    }
+
     public static class LoginRequest {
         private String email;
         private String password;
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+    }
+
+    public static class RegistroRequest {
+        private String nombre;
+        private String email;
+        private String password;
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public void setNombre(String nombre) {
+            this.nombre = nombre;
+        }
 
         public String getEmail() {
             return email;
