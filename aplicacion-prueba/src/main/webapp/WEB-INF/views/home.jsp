@@ -8,7 +8,7 @@
 
     <body>
         <h1>Lista de Productos</h1>
-        <a href="/productos/nuevo">Agregar Producto</a>
+        <a href="${pageContext.request.contextPath}/productos/nuevo">Agregar Producto</a>
         <table border="1">
             <thead>
                 <tr>
