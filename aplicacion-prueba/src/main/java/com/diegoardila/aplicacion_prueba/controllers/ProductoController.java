@@ -11,6 +11,6 @@ public class ProductoController {
     @GetMapping("/nuevo")
     public String home(Model model) {
         model.addAttribute("mensaje", "¡Bienvenido a la aplicación!");
-        return "formulario"; // Se refiere a home.jsp en WEB-INF/views/
+        return "formulario"; // Se refiere a formulario.jsp en WEB-INF/views/
     }
 }

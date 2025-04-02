@@ -35,7 +35,8 @@ public class SecurityConfig {
                                                 .permitAll() // Vistas
                                                 // JSP
                                                 // permitidas
-                                                .antMatchers("/api/auth/**").permitAll() // APIs públicas
+                                                .antMatchers("/api/auth/**", "/api/productos/**").permitAll() // APIs
+                                                                                                              // públicas
                                                 .antMatchers("/css/**", "/js/**", "/images/**").permitAll() // Recursos
                                                                                                             // estáticos
                                                 .anyRequest().authenticated())
