@@ -30,9 +30,11 @@ public class SecurityConfig {
                                 .csrf().disable() // Desactiva CSRF para peticiones desde frontend (activar si usas
                                                   // formularios)
                                 .authorizeHttpRequests(auth -> auth
-                                                .antMatchers("/", "/home", "/auth/login", "/auth/registro").permitAll() // Vistas
-                                                                                                                        // JSP
-                                                                                                                        // permitidas
+                                                .antMatchers("/", "/home", "/auth/login", "/auth/registro",
+                                                                "/productos/nuevo")
+                                                .permitAll() // Vistas
+                                                // JSP
+                                                // permitidas
                                                 .antMatchers("/api/auth/**").permitAll() // APIs públicas
                                                 .antMatchers("/css/**", "/js/**", "/images/**").permitAll() // Recursos
                                                                                                             // estáticos
