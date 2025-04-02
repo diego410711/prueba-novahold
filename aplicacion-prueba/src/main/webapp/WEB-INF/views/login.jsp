@@ -43,10 +43,18 @@
                             },
                             body: JSON.stringify({ email, password })
                         })
-                            .then(response => response.json())
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error("Error en la autenticación.");
+                                }
+                                return response.json();
+                            })
                             .then(data => {
-                                if (data.success) {
-                                    window.location.href = "${pageContext.request.contextPath}/home"; // Redirigir a home
+                                console.log("Respuesta del servidor:", data);
+                                if (data.redirectUrl) {
+                                    let redirectPath = "${pageContext.request.contextPath}" + data.redirectUrl;
+                                    console.log("Redirigiendo a:", redirectPath); // Verifica que la URL generada es correcta
+                                    window.location.href = redirectPath;
                                 } else {
                                     alert("Error: " + data.message);
                                 }
@@ -54,6 +62,7 @@
                             .catch(error => console.error("Error en la petición: ", error));
                     });
                 </script>
+
         </body>
 
         </html>

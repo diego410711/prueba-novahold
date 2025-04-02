@@ -49,7 +49,11 @@ public class AuthRestController {
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
             if (authentication.isAuthenticated()) {
-                return ResponseEntity.ok(Map.of("message", "Inicio de sesión exitoso", "user", usuario.getEmail()));
+                return ResponseEntity.ok(Map.of(
+                        "message", "Inicio de sesión exitoso",
+                        "user", usuario.getEmail(),
+                        "redirectUrl", "/home" // Agregar URL de redirección
+                ));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("error", "Error en la autenticación."));
