@@ -43,7 +43,11 @@
                             tbody.innerHTML = "";
 
                             data.forEach(producto => {
+                                console.log("Id de productos:", producto.id);
+
                                 const productoId = producto.id;
+                                console.log("Variable de id", productoId);
+
 
                                 if (!productoId) {
                                     console.error("❌ ERROR: El producto no tiene ID:", producto);
@@ -55,6 +59,13 @@
                                 // Crear celdas
                                 const idCell = document.createElement("td");
                                 idCell.textContent = productoId;
+                                const idInput = document.createElement("input");
+                                idInput.type = "text";
+                                idInput.value = producto.id;
+                                idInput.classList.add("input-hidden");
+
+                                idCell.appendChild(idInput);
+
 
                                 const nombreCell = document.createElement("td");
                                 const nombreSpan = document.createElement("span");
@@ -100,7 +111,7 @@
                                 const guardarBtn = document.createElement("button");
                                 guardarBtn.textContent = "Guardar";
                                 guardarBtn.classList.add("input-hidden");
-                                guardarBtn.onclick = () => guardarProducto(guardarBtn, productoId);
+                                guardarBtn.onclick = () => guardarProducto(guardarBtn);
 
                                 // Enlace Eliminar
                                 const eliminarLink = document.createElement("a");
@@ -135,20 +146,20 @@
                     button.style.display = "none"; // Ocultar botón "Editar"
                     row.querySelector("button:nth-child(2)").style.display = "inline"; // Mostrar "Guardar"
                 }
-
-                function guardarProducto(button, id) {
+                function guardarProducto(button) {
                     const row = button.closest("tr");
                     const inputs = row.querySelectorAll("input");
-                    const nombre = inputs[0].value;
-                    const descripcion = inputs[1].value;
-                    const precio = parseFloat(inputs[2].value);
+                    const id = inputs[0].value;
+                    const nombre = inputs[1].value;
+                    const descripcion = inputs[2].value;
+                    const precio = parseFloat(inputs[3].value);
 
-                    fetch(`${pageContext.request.contextPath}/api/productos/${id}`, {
+                    fetch(`${pageContext.request.contextPath}/api/productos/actualizar`, { // Cambia la URL a un endpoint genérico
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify({ nombre, descripcion, precio })
+                        body: JSON.stringify({ id, nombre, descripcion, precio }) // Agrega el ID al payload
                     })
                         .then(response => {
                             if (!response.ok) {
@@ -177,6 +188,8 @@
                             alert("No se pudo actualizar el producto.");
                         });
                 }
+
+
             </script>
 
 
