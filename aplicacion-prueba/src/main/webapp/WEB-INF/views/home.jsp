@@ -5,32 +5,42 @@
 
         <head>
             <title>Lista de Productos</title>
-            <link rel="stylesheet" href="/css/styles.css">
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         </head>
 
-        <body>
+        <body class="d-flex justify-content-center align-items-center vh-100 bg-light">
             <style>
                 .input-hidden {
                     display: none;
                 }
             </style>
-
-            <h1>Lista de Productos</h1>
-            <a href="${pageContext.request.contextPath}/productos/nuevo">Agregar Producto</a>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Precio</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="productos-table-body">
-                    <!-- Los productos se insertarán aquí dinámicamente -->
-                </tbody>
-            </table>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card shadow p-4">
+                            <h3 class="text-center">Lista de Productos</h3>
+                            <a href="${pageContext.request.contextPath}/productos/nuevo">Agregar Producto</a>
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th>Precio</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productos-table-body">
+                                    <!-- Los productos se insertarán aquí dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <script>
                 document.addEventListener("DOMContentLoaded", () => {
