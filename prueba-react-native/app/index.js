@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Button, TextInput, Text } from 'react-native-paper';
+import { Button, TextInput, Text, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 
-export default function LoginScreen({ navigation }) {
+export default function Login() {
     const router = useRouter();
+    const theme = useTheme(); // Detecta si el usuario está en modo oscuro o claro
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ export default function LoginScreen({ navigation }) {
 
             if (response.status === 200) {
                 alert('Inicio de sesión exitoso');
-                navigation.replace('Home'); // Redirige a Home después de loguearse
+                router.replace('/home'); // Redirige a Home después de loguearse
             } else {
                 alert('Error en el inicio de sesión');
             }
@@ -39,12 +40,18 @@ export default function LoginScreen({ navigation }) {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+            <Text style={[styles.title, { color: theme.colors.onBackground }]}>
+                Iniciar Sesión
+            </Text>
+
             <TextInput
                 style={styles.input}
                 label="Correo electrónico"
                 value={email}
                 onChangeText={setEmail}
+                mode="outlined"
+                theme={{ colors: { text: theme.colors.onBackground } }}
             />
             <TextInput
                 style={styles.input}
@@ -52,11 +59,15 @@ export default function LoginScreen({ navigation }) {
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
+                mode="outlined"
+                theme={{ colors: { text: theme.colors.onBackground } }}
             />
+
             <Button mode="contained" onPress={handleLogin} style={styles.button} loading={loading} disabled={loading}>
                 Iniciar Sesión
             </Button>
-            <Button onPress={() => router.push('/screens/RegisterScreen')}>
+
+            <Button onPress={() => router.push('/register')} textColor={theme.colors.primary}>
                 ¿No tienes cuenta? Regístrate
             </Button>
         </View>
@@ -66,10 +77,20 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center', padding: 20
+        justifyContent: 'center',
+        padding: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 20,
     },
     input: {
         marginBottom: 10,
     },
-    button: { marginTop: 10, width: '100%' },
+    button: {
+        marginTop: 10,
+        width: '100%',
+    },
 });
