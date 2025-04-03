@@ -34,9 +34,8 @@
                 <h2 class="text-center mb-4">Iniciar Sesión</h2>
 
                 <!-- Mostrar error si existe -->
-                <c:if test="${not empty error}">
-                    <div class="alert alert-danger">${error}</div>
-                </c:if>
+                <div id="error-alert" class="alert alert-danger d-none"></div>
+
 
                 <form id="loginForm">
                     <div class="mb-3">
@@ -64,6 +63,7 @@
                     const email = document.getElementById('email').value;
                     const password = document.getElementById('password').value;
                     const csrfToken = document.getElementById('csrfToken').value;
+                    const errorAlert = document.getElementById('error-alert');
 
                     fetch("${pageContext.request.contextPath}/api/auth/login", {
                         method: "POST",
@@ -89,7 +89,11 @@
                                 alert("Error: " + data.message);
                             }
                         })
-                        .catch(error => console.error("Error en la petición: ", error));
+                        .catch(error => {
+                            console.error("Error en la petición: ", error);
+                            errorAlert.textContent = error.message;
+                            errorAlert.classList.remove("d-none");
+                        });// Mostrar la alerta de error);
                 });
             </script>
         </body>
