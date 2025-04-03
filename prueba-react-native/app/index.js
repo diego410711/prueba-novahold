@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
+import { useRouter } from 'expo-router';
 
 export default function LoginScreen({ navigation }) {
+
+    const router = useRouter();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -34,6 +38,9 @@ export default function LoginScreen({ navigation }) {
             />
             <Button mode="contained" onPress={handleLogin} style={styles.button}>
                 Iniciar Sesión
+            </Button>
+            <Button onPress={() => router.push('/screens/RegisterScreen')}>
+                ¿No tienes cuenta? Regístrate
             </Button>
         </View>
     );
