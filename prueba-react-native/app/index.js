@@ -4,7 +4,7 @@ import { Button, TextInput, Text, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 
-export default function Login() {
+export default function Index() {
     const router = useRouter();
     const theme = useTheme(); // Detecta si el usuario está en modo oscuro o claro
     const [email, setEmail] = useState('');

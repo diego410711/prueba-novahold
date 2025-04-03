@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TextInput, Button, Text } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { TextInput, Button, Text, useTheme } from 'react-native-paper';
+import { useRouter } from 'expo-router';
 
 export default function Register() {
-    const navigation = useNavigation();
+    const router = useRouter();
+    const theme = useTheme(); // Detecta el tema del sistema
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -16,13 +17,17 @@ export default function Register() {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Registro</Text>
+        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+            <Text style={[styles.title, { color: theme.colors.onBackground }]}>
+                Registro
+            </Text>
 
             <TextInput
                 label="Nombre"
                 value={name}
                 onChangeText={setName}
+                mode="outlined"
+                theme={{ colors: { text: theme.colors.onBackground } }}
                 style={styles.input}
             />
 
@@ -31,6 +36,8 @@ export default function Register() {
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
+                mode="outlined"
+                theme={{ colors: { text: theme.colors.onBackground } }}
                 style={styles.input}
             />
 
@@ -39,6 +46,8 @@ export default function Register() {
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
+                mode="outlined"
+                theme={{ colors: { text: theme.colors.onBackground } }}
                 style={styles.input}
             />
 
@@ -46,7 +55,7 @@ export default function Register() {
                 Registrarse
             </Button>
 
-            <Button mode="text" onPress={() => navigation.navigate('Login')}>
+            <Button onPress={() => router.push('/')} textColor={theme.colors.primary}>
                 ¿Ya tienes una cuenta? Inicia sesión
             </Button>
         </View>
@@ -70,5 +79,6 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 10,
+        width: '100%',
     },
 });
