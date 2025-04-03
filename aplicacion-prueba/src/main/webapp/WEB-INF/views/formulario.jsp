@@ -44,7 +44,8 @@
                                 </div>
                             </form>
                             <div class="text-center mt-3">
-                                <a href="/productos" class="btn btn-secondary">Volver a la lista</a>
+                                <a href="${pageContext.request.contextPath}/home" class="btn btn-secondary">Volver a la
+                                    lista</a>
                             </div>
                         </div>
                     </div>
