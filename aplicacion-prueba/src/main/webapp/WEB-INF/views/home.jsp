@@ -22,9 +22,17 @@
                     <div class="col-md-6">
                         <div class="card shadow p-4">
                             <h3 class="text-center">Lista de Productos</h3>
-                            <a href="${pageContext.request.contextPath}/productos/nuevo">Agregar Producto</a>
-                            <table border="1">
-                                <thead>
+                            <div class="d-grid">
+                                <div class="text-center mt-3">
+                                    <a href="${pageContext.request.contextPath}/productos/nuevo"
+                                        class="btn btn-success btn-sm ">
+                                        ➕ Agregar Producto
+                                    </a>
+                                </div>
+
+                            </div>
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead class="table-dark">
                                     <tr>
                                         <th>ID</th>
                                         <th>Nombre</th>
@@ -74,18 +82,21 @@
                                 // Botón Editar
                                 const editarBtn = document.createElement("button");
                                 editarBtn.textContent = "Editar";
+                                editarBtn.classList.add("btn", "btn-warning", "btn-sm"); // Botón amarillo y pequeño
                                 editarBtn.onclick = () => editarProducto(row, editarBtn);
 
                                 // Botón Guardar
                                 const guardarBtn = document.createElement("button");
                                 guardarBtn.textContent = "Guardar";
-                                guardarBtn.classList.add("input-hidden");
+                                guardarBtn.classList.add("btn", "btn-success", "btn-sm", "input-hidden"); // Botón verde y pequeño
                                 guardarBtn.onclick = () => guardarProducto(row, guardarBtn);
 
-                                // Enlace Eliminar
+                                // Botón Eliminar
                                 const eliminarBtn = document.createElement("button");
                                 eliminarBtn.textContent = "Eliminar";
-                                eliminarBtn.onclick = () => eliminarProducto(row);;
+                                eliminarBtn.classList.add("btn", "btn-danger", "btn-sm"); // Botón rojo y pequeño
+                                eliminarBtn.onclick = () => eliminarProducto(row);
+
 
                                 // Agregar acciones
                                 accionesCell.appendChild(editarBtn);
