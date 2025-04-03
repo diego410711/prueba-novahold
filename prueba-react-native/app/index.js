@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { Button } from 'react-native-paper';
+import { View, StyleSheet } from 'react-native';
+import { Button, TextInput, Text } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 
 export default function LoginScreen({ navigation }) {
@@ -21,17 +21,15 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Iniciar Sesión</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Correo electrónico"
-                keyboardType="email-address"
+                label="Correo electrónico"
                 value={email}
                 onChangeText={setEmail}
             />
             <TextInput
                 style={styles.input}
-                placeholder="Contraseña"
+                label="Contraseña"
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
@@ -47,15 +45,12 @@ export default function LoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
+    container: {
+        flex: 1,
+        justifyContent: 'center', padding: 20
+    },
     title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
     input: {
-        width: '100%',
-        height: 50,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 5,
-        paddingHorizontal: 10,
         marginBottom: 10,
     },
     button: { marginTop: 10, width: '100%' },
