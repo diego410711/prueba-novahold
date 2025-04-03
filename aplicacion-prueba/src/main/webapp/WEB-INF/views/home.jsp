@@ -19,19 +19,18 @@
             </style>
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-md-6">
-                        <div class="card shadow p-4">
+                    <div class="col-md-10 mx-auto">
+                        <div class="card shadow p-4 w-100">
                             <h3 class="text-center">Lista de Productos</h3>
                             <div class="d-grid">
                                 <div class="text-center mt-3">
                                     <a href="${pageContext.request.contextPath}/productos/nuevo"
-                                        class="btn btn-success btn-sm ">
-                                        ➕ Agregar Producto
+                                        class="btn btn-success btn-sm">
+                                        + Agregar Producto
                                     </a>
                                 </div>
-
                             </div>
-                            <table class="table table-striped table-bordered table-hover">
+                            <table class="table table-striped table-bordered table-hover mt-3">
                                 <thead class="table-dark">
                                     <tr>
                                         <th>ID</th>
@@ -47,6 +46,7 @@
                             </table>
                         </div>
                     </div>
+
                 </div>
             </div>
 
