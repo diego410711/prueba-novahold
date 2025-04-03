@@ -1,56 +1,89 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-        <form id="productoForm">
-            <input type="hidden" name="id" id="id" value="${producto.id}">
 
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" value="${producto.nombre}" required>
-            <br>
+        <!DOCTYPE html>
+        <html lang="es">
 
-            <label for="descripcion">Descripción:</label>
-            <textarea id="descripcion" name="descripcion" required>${producto.descripcion}</textarea>
-            <br>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Formulario de Producto</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        </head>
 
-            <label for="precio">Precio:</label>
-            <input type="number" step="0.01" id="precio" name="precio" value="${producto.precio}" required>
-            <br>
+        <body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card shadow p-4">
+                            <h3 class="text-center">Formulario de Producto</h3>
+                            <form id="productoForm">
+                                <input type="hidden" name="id" id="id" value="${producto.id}">
 
-            <button type="submit">Guardar</button>
-        </form>
+                                <div class="mb-3">
+                                    <label for="nombre" class="form-label">Nombre:</label>
+                                    <input type="text" id="nombre" name="nombre" class="form-control"
+                                        value="${producto.nombre}" required>
+                                </div>
 
-        <a href="/productos">Volver a la lista</a>
+                                <div class="mb-3">
+                                    <label for="descripcion" class="form-label">Descripción:</label>
+                                    <textarea id="descripcion" name="descripcion" class="form-control"
+                                        required>${producto.descripcion}</textarea>
+                                </div>
 
-        <!-- JavaScript para enviar datos con fetch -->
-        <script>
-            document.getElementById("productoForm").addEventListener("submit", async function (event) {
-                event.preventDefault(); // Evita la recarga de la página
+                                <div class="mb-3">
+                                    <label for="precio" class="form-label">Precio:</label>
+                                    <input type="number" step="0.01" id="precio" name="precio" class="form-control"
+                                        value="${producto.precio}" required>
+                                </div>
 
-                const producto = {
-                    id: document.getElementById("id").value || null,
-                    nombre: document.getElementById("nombre").value,
-                    descripcion: document.getElementById("descripcion").value,
-                    precio: parseFloat(document.getElementById("precio").value)
-                };
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </form>
+                            <div class="text-center mt-3">
+                                <a href="/productos" class="btn btn-secondary">Volver a la lista</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                try {
-                    const response = await fetch("${pageContext.request.contextPath}/api/productos/guardar", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(producto)
-                    });
+            <script>
+                document.getElementById("productoForm").addEventListener("submit", async function (event) {
+                    event.preventDefault();
 
-                    const data = await response.json();
-                    if (response.ok) {
-                        alert("Producto guardado exitosamente");
-                        window.location.href = "${pageContext.request.contextPath}/home"; // Redirige a la lista de productos
-                    } else {
-                        alert("Error: " + data.error);
+                    const producto = {
+                        id: document.getElementById("id").value || null,
+                        nombre: document.getElementById("nombre").value,
+                        descripcion: document.getElementById("descripcion").value,
+                        precio: parseFloat(document.getElementById("precio").value)
+                    };
+
+                    try {
+                        const response = await fetch("${pageContext.request.contextPath}/api/productos/guardar", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(producto)
+                        });
+
+                        const data = await response.json();
+                        if (response.ok) {
+                            alert("Producto guardado exitosamente");
+                            window.location.href = "${pageContext.request.contextPath}/home";
+                        } else {
+                            alert("Error: " + data.error);
+                        }
+                    } catch (error) {
+                        console.error("Error al enviar:", error);
+                        alert("Ocurrió un error al guardar el producto.");
                     }
-                } catch (error) {
-                    console.error("Error al enviar:", error);
-                    alert("Ocurrió un error al guardar el producto.");
-                }
-            });
-        </script>
+                });
+            </script>
+        </body>
+
+        </html>

@@ -155,33 +155,33 @@
                 }
 
                 function eliminarProducto(row) {
-    const id = row.querySelector("td:first-child span").textContent.trim(); // Asegurar que no haya espacios en blanco
+                    const id = row.querySelector("td:first-child span").textContent.trim(); // Asegurar que no haya espacios en blanco
 
-    if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
+                    if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
 
-    fetch(`${pageContext.request.contextPath}/api/productos/eliminar`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }) // Enviar el ID en el payload
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.text().then(errorMessage => { 
-                throw new Error(errorMessage || "Error desconocido al eliminar el producto.");
-            });
-        }
-        return response.text(); // Leer la respuesta como texto
-    })
-    .then(message => {
-        console.log("✅ Producto eliminado:", message);
-        alert("Producto eliminado correctamente.");
-        location.reload(); // 🔄 Recargar la página solo si fue exitoso
-    })
-    .catch(error => {
-        console.error("Error al eliminar el producto:", error);
-        alert("No se pudo eliminar el producto. Detalles: " + error.message);
-    });
-}
+                    fetch(`${pageContext.request.contextPath}/api/productos/eliminar`, {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ id }) // Enviar el ID en el payload
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                return response.text().then(errorMessage => {
+                                    throw new Error(errorMessage || "Error desconocido al eliminar el producto.");
+                                });
+                            }
+                            return response.text(); // Leer la respuesta como texto
+                        })
+                        .then(message => {
+                            console.log(" Producto eliminado:", message);
+                            alert("Producto eliminado correctamente.");
+                            location.reload(); //  Recargar la página solo si fue exitoso
+                        })
+                        .catch(error => {
+                            console.error("Error al eliminar el producto:", error);
+                            alert("No se pudo eliminar el producto. Detalles: " + error.message);
+                        });
+                }
 
             </script>
 
