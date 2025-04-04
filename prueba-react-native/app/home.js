@@ -41,7 +41,10 @@ export default function Home() {
         if (!selectedProduct) return;
 
         try {
-            await axios.delete(`http://localhost:8080/aplicacion-prueba-0.0.1-SNAPSHOT/api/productos/${selectedProduct}`);
+            await axios.delete(
+                `http://localhost:8080/aplicacion-prueba-0.0.1-SNAPSHOT/api/productos/eliminar`,
+                { data: { id: selectedProduct } } // Enviar el ID en el payload
+            );
             fetchProducts(); // Recargar la lista después de eliminar
         } catch (error) {
             console.error("Error al eliminar producto:", error);
