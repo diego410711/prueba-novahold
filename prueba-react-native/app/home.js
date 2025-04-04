@@ -41,6 +41,14 @@ export default function Home() {
 
     return (
         <View style={styles.container}>
+            <Button
+                mode="contained"
+                onPress={() => router.push('/product/new')}
+                style={styles.addButton}
+            >
+                Agregar Producto
+            </Button>
+
             {loading ? (
                 <ActivityIndicator animating={true} size="large" />
             ) : (
@@ -62,5 +70,8 @@ const styles = StyleSheet.create({
     },
     card: {
         marginBottom: 10,
+    },
+    addButton: {
+        marginBottom: 15,
     },
 });

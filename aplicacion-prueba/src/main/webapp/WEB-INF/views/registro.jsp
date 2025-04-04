@@ -69,7 +69,7 @@
                         .then(data => {
                             console.log("Respuesta del servidor:", data);
                             if (data.redirectUrl) {
-                                window.location.href = `${pageContext.request.contextPath}$/auth/login`;
+                                window.location.href = `${pageContext.request.contextPath}/auth/login`;
                             } else if (data.message) {
                                 alert(data.message);
                                 window.location.href = `${pageContext.request.contextPath}/auth/login`;
