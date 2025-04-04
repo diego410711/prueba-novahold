@@ -69,13 +69,13 @@
                         .then(data => {
                             console.log("Respuesta del servidor:", data);
                             if (data.redirectUrl) {
-                                window.location.href = `${pageContext.request.contextPath}${data.redirectUrl}`;
+                                window.location.href = `${pageContext.request.contextPath}$/auth/login`;
                             } else if (data.message) {
                                 alert(data.message);
-                                window.location.href = `${pageContext.request.contextPath}/login`;
+                                window.location.href = `${pageContext.request.contextPath}/auth/login`;
                             } else {
                                 alert("Registro exitoso. Ahora puedes iniciar sesión.");
-                                window.location.href = `${pageContext.request.contextPath}/login`;
+                                window.location.href = `${pageContext.request.contextPath}/auth/login`;
                             }
                         })
                         .catch(error => {

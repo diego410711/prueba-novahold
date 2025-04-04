@@ -2,18 +2,43 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TextInput, Button, Text, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import axios from 'axios';
 
 export default function Register() {
     const router = useRouter();
-    const theme = useTheme(); // Detecta el tema del sistema
+    const theme = useTheme();
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleRegister = () => {
-        console.log('Registrando usuario:', { name, email, password });
-        // Aquí puedes llamar a una API para registrar el usuario
+    const handleRegister = async () => {
+        if (!name || !email || !password) {
+            alert('Por favor, completa todos los campos');
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const response = await axios.post(
+                'http://localhost:8080/aplicacion-prueba-0.0.1-SNAPSHOT/api/auth/registro',
+                { nombre: name, email, password }
+            );
+
+            if (response.status === 200) {
+                alert('Registro exitoso. Ahora inicia sesión.');
+                router.replace('/'); // Redirige al login
+            } else {
+                alert('Error en el registro');
+            }
+        } catch (error) {
+            alert('No se pudo completar el registro');
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -51,7 +76,13 @@ export default function Register() {
                 style={styles.input}
             />
 
-            <Button mode="contained" onPress={handleRegister} style={styles.button}>
+            <Button
+                mode="contained"
+                onPress={handleRegister}
+                style={styles.button}
+                loading={loading}
+                disabled={loading}
+            >
                 Registrarse
             </Button>
 

@@ -43,7 +43,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public Usuario buscarPorEmail(String email) {
-        return usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        return usuarioRepository.findByEmail(email).orElse(null);
     }
+
 }

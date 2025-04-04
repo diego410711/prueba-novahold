@@ -32,6 +32,7 @@ public class AuthRestController {
     public ResponseEntity<?> procesarLogin(@RequestBody LoginRequest loginRequest) {
         try {
             Usuario usuario = usuarioService.buscarPorEmail(loginRequest.getEmail());
+
             if (usuario == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("error", "Usuario no registrado."));
@@ -42,18 +43,13 @@ public class AuthRestController {
                         .body(Map.of("error", "Contraseña incorrecta."));
             }
 
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            // Autenticación manual validada arriba, puedes omitir AuthenticationManager si
+            // no lo usas
+            return ResponseEntity.ok(Map.of(
+                    "message", "Inicio de sesión exitoso",
+                    "user", usuario.getEmail(),
+                    "redirectUrl", "/home"));
 
-            if (authentication.isAuthenticated()) {
-                return ResponseEntity.ok(Map.of(
-                        "message", "Inicio de sesión exitoso",
-                        "user", usuario.getEmail(),
-                        "redirectUrl", "/home"));
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("error", "Error en la autenticación."));
-            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Error inesperado: " + e.getMessage()));
@@ -71,13 +67,13 @@ public class AuthRestController {
             Usuario nuevoUsuario = new Usuario();
             nuevoUsuario.setNombre(registroRequest.getNombre());
             nuevoUsuario.setEmail(registroRequest.getEmail());
-            nuevoUsuario.setPassword(passwordEncoder.encode(registroRequest.getPassword()));
+            nuevoUsuario.setPassword(registroRequest.getPassword()); // No encriptar aquí
 
-            usuarioService.registrarUsuario(nuevoUsuario);
+            usuarioService.registrarUsuario(nuevoUsuario); // 🔥 Se encripta dentro del service
 
             return ResponseEntity.ok(Map.of(
                     "message", "Registro exitoso",
-                    "redirectUrl", "/login"));
+                    "redirectUrl", "/auth/login"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Error inesperado: " + e.getMessage()));
